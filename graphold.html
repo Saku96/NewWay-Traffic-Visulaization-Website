@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Road Traffic Visualization Graph</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  </head>
+  <body>
+    <div class="topnav" style="height: 40px; background-color: blue;">
+            
+      <a href="home.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="map.html">Map</a>
+      <a href="graph.html">Visualization</a>
+      <a href="contact.html">Contact</a>
+  
+    </div>
+    <h1>Road Traffic Visualization Graph</h1>
+    <!-- <H1>Traffic visualization on Nugegoda</H1> -->
+        
+        
+       
+    <canvas id="myChart" width="800" height="350"></canvas>
+
+    <script>
+      // Data from: https://data.giss.nasa.gov/gistemp/
+      // Mean from: https://earthobservatory.nasa.gov/world-of-change/DecadalTemp
+
+      window.addEventListener('load', setup);
+
+      async function setup() {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const dataTemps = await getData();
+        const myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: dataTemps.location,
+            datasets: [
+              {
+                label: 'Moving towards Kirulapone',
+                data: dataTemps.kirulapone,
+                fill: false,
+                borderColor: 'purple',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderWidth: 1
+              },
+              {
+                label: 'Moving towards Maharagama',
+                data: dataTemps.northern,
+                fill: false,
+                borderColor: 'rgba(99, 132, 255, 1)',
+                backgroundColor: 'rgba(99, 132, 255, 0.5)',
+                borderWidth: 1
+              },
+              // {
+              //   label: 'Dehiwala',
+              //   data: dataTemps.southern,
+              //   fill: false,
+              //   borderColor: 'rgba(99, 255, 132, 1)',
+              //   backgroundColor: 'rgba(99, 255, 132, 0.5)',
+              //   borderWidth: 1
+              // },
+              // {
+              //   label: 'Battaramulla',
+              //   data: dataTemps.battaraulla,
+              //   fill: false,
+              //   borderColor: 'rgba(99, 255, 255, 1)',
+              //   backgroundColor: 'rgba(99, 255, 255, 1)',
+              //   borderWidth: 1
+              // }
+
+            ]
+          },
+          options: {}
+        });
+      }
+
+      async function getData() {
+        // const response = await fetch('testdata.csv');
+        const response = await fetch('book.csv');
+        const data = await response.text();
+        const location = [];
+        const kirulapone = [];
+        const northern = [];
+        const southern = [];
+        const battaraulla=[];
+        const rows = data.split('\n').slice(1);
+        rows.forEach(row => {
+          const cols = row.split(',');
+          location.push(cols[1]);
+          kirulapone.push(parseFloat(cols[2]));
+          northern.push(parseFloat(cols[3]));
+          // southern.push(parseFloat(cols[4]));
+          // battaraulla.push( parseFloat(cols[5]));
+          
+
+        });
+        return { location, kirulapone, northern, southern,battaraulla };
+      }
+      
+    </script>
+  </body>
+</html>
